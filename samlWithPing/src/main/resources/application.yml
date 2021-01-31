@@ -1,0 +1,25 @@
+# https://docs.spring.io/spring-security/site/docs/5.2.8.RELEASE/reference/html/saml2.html#samllogin-sample-boot
+# https://github.com/spring-projects/spring-boot/issues/18260
+# https://stackoverflow.com/questions/60626358/spring-security-saml2-dynamic-selection-of-idps-or-dynamic-urls-for-them
+
+# org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties
+
+# Redirect to start authentication to: saml2/authenticate/pingfederate
+# Response is handled on: login/saml2/sso/pingfederate
+logging.level:
+    org.springframework.security: DEBUG
+
+spring:
+  security:
+    saml2:
+      relyingparty:
+        registration:
+          pingfederate:
+            identityprovider:
+              entity-id: https://localhost:9031
+              singlesignon:
+                signRequest: false
+                url: https://localhost:9031/idp/SSO.saml2
+              verification:
+                credentials:
+                  - certificate-location: "classpath:certs/pingfederate.crt"
