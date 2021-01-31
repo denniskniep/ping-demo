@@ -1,12 +1,26 @@
+## Start 
+How to get devops key and user: https://devops.pingidentity.com/get-started/devopsRegistration/
+
+```
+sudo PING_IDENTITY_DEVOPS_USER=<devopsuser> PING_IDENTITY_DEVOPS_KEY=<devopskey> docker-compose up
+```
+
+## Test Auth with SAML
+Run the Spring Boot App inside that folder: `samlWithPing/`
 
 
-## PingFederate Serverprofile
-### Baseline
+## Test Auth with OIDC
+Run the Spring Boot App inside that folder: `oidcWithPing/`
+
+
+## PingFederate ServerProfile
+### Baseline ServerProfile
 Copied from https://github.com/pingidentity/pingidentity-server-profiles/tree/master/baseline/pingfederate to serverProfiles/pingFederate/
 
-### Custom Profile
-How to update Profile: https://devops.pingidentity.com/how-to/buildPingFederateProfile/
+### Custom ServerProfile
+How to maintain custom Profile: https://devops.pingidentity.com/how-to/buildPingFederateProfile/
 
+1. Export Configuration 
 ```
 cd serverProfiles/bulkExportTool/
 
@@ -20,6 +34,7 @@ curl \
   --user "administrator:2FederateM0re" > ./out/data.json
 ```
 
+2. Replace Secrets, URLS, etc. with EnvironmentVariables
 Use https://github.com/pingidentity/pingidentity-devops-getting-started/tree/master/99-helper-scripts/ping-bulkconfigtool
 for variablisation
 
