@@ -1,0 +1,42 @@
+# https://www.baeldung.com/spring-security-openid-connect
+# https://www.baeldung.com/spring-webclient-oauth2#springsecurity-internals
+
+# https://docs.spring.io/spring-security/site/docs/5.2.x/reference/html/oauth2.html#oauth2login-boot-property-mappings
+
+# http://localhost:8181/login/oauth2/code/springDemoOidc
+# https://localhost:9031/.well-known/openid-configuration
+
+# Add a /etc/hosts entry with `127.0.0.1 pingfederate`
+
+server.port: 8181
+
+#proxy.host: localhost
+#proxy.port: 9191
+
+logging.level:
+    org.springframework.security: TRACE
+
+global.clients.ssl:
+    trustStorePath: truststore.jks
+    trustStorePassword: mypassword
+
+spring.security.oauth2.client:
+    registration:
+        springDemoOidc:
+            provider: pingfederate
+            client-name: spring-demo-oidc
+            client-id: spring-demo-oidc
+            client-secret: do8nhiVKXTxjHWgABeiZzKYKZwJwZ2sSuAoFeJYApLha1n7amh8fVsPqSO6ePwBr
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8181/login/oauth2/code/springDemoOidc
+            scope:
+                - openid
+                - profile
+                - email
+    provider:
+        pingfederate:
+            authorization-uri: https://pingfederate:9031/as/authorization.oauth2 # Browser redirect (FrontChannel)
+            token-uri: https://pingfederate:9031/as/token.oauth2 # OAuth 2.0 Access Token Response Endpoint (BackChannel)
+            user-info-uri: https://pingfederate:9031/idp/userinfo.openid # OIDC UserInfo Endpoint (BackChannel)
+            jwk-set-uri: https://pingfederate:9031/pf/JWKS
+            user-name-attribute: email
