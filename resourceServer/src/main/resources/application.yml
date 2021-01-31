@@ -1,0 +1,19 @@
+# https://www.baeldung.com/spring-security-oauth-resource-server
+
+# https://localhost:9031/.well-known/openid-configuration
+# Add a /etc/hosts entry with `127.0.0.1 pingfederate`
+
+server.port: 8282
+
+proxy.host: localhost
+proxy.port: 9191
+
+logging.level:
+    org.springframework.security: TRACE
+
+global.clients.ssl:
+    trustStorePath: truststore.jks
+    trustStorePassword: mypassword
+
+#spring.security.oauth2.resourceserver.jwt.issuer-uri: https://pingfederate:9031
+spring.security.oauth2.resourceserver.jwt.jwk-set-uri: https://pingfederate:9031/pf/JWKS

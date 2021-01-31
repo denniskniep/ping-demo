@@ -3,6 +3,8 @@
 
 # https://docs.spring.io/spring-security/site/docs/5.2.x/reference/html/oauth2.html#oauth2login-boot-property-mappings
 
+# https://spring.io/blog/2018/03/06/using-spring-security-5-to-integrate-with-oauth-2-secured-services-such-as-facebook-and-github
+
 # http://localhost:8181/login/oauth2/code/springDemoOidc
 # https://localhost:9031/.well-known/openid-configuration
 
@@ -10,8 +12,8 @@
 
 server.port: 8181
 
-#proxy.host: localhost
-#proxy.port: 9191
+proxy.host: localhost
+proxy.port: 9191
 
 logging.level:
     org.springframework.security: TRACE
@@ -33,10 +35,11 @@ spring.security.oauth2.client:
                 - openid
                 - profile
                 - email
+                - read_normal_foo
     provider:
         pingfederate:
             authorization-uri: https://pingfederate:9031/as/authorization.oauth2 # Browser redirect (FrontChannel)
             token-uri: https://pingfederate:9031/as/token.oauth2 # OAuth 2.0 Access Token Response Endpoint (BackChannel)
             user-info-uri: https://pingfederate:9031/idp/userinfo.openid # OIDC UserInfo Endpoint (BackChannel)
             jwk-set-uri: https://pingfederate:9031/pf/JWKS
-            user-name-attribute: email
+            user-name-attribute: preferred_username

@@ -11,7 +11,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers( "/", "/saml2/service-provider-metadata/**", "/login/saml2/sso/**").permitAll()
+                .antMatchers( "/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()

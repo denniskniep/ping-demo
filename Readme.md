@@ -44,3 +44,15 @@ for variablisation
 ```
 java -jar ./ping-bulkexport-tools.jar ./in/pf-config.json ./out/data.json ./out/env_vars.env ./out/data.json.subst > ./out/export-convert.log
 ```
+
+## Issues
+
+Error on RessourceServer:
+`Spring boot Signed JWT rejected: Another algorithm expected, or no matching key(s) found`
+
+Key can not be found on PingFederates `/pf/JWKS` Endpoint
+
+There is already a support case:
+https://support.pingidentity.com/s/question/0D51W00005t4LzISAU/shared-pfjwks-for-keys-used-for-jwt-access-token-signing
+
+-> Access Token Management > Use Centralized Signing Key
