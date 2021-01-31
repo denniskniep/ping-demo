@@ -1,0 +1,73 @@
+{
+  "config-aliases":[
+  ],
+  "search-replace":[
+   {
+      "search": "localhost:9999",
+      "replace": "${PF_ADMIN_PUBLIC_HOST_AND_PORT}",
+      "apply-env-file": false
+   },
+   {
+      "search": "localhost:9031",
+      "replace": "${PF_ENGINE_PUBLIC_HOST_AND_PORT}",
+      "apply-env-file": false
+   }
+  ],
+  "expose-parameters":[
+    {
+      "parameter-name": "fileData",
+      "unique-identifiers": [
+          "id"
+      ]
+    },
+    {
+      "parameter-name": "encryptedValue",
+      "replace-name": "value",
+      "unique-identifiers": [
+          "name",
+          "name~Username/value"
+      ]
+    },
+    {
+      "parameter-name": "encryptedPassword",
+      "replace-name": "password",
+      "unique-identifiers": [
+          "id",
+          "username"
+      ]
+    },
+    {
+      "parameter-name": "encryptedKeyData",
+      "replace-name": "keyData",
+      "unique-identifiers": [
+          "id"
+      ]
+    },
+    {
+      "parameter-name": "encryptedSharedSecret",
+      "replace-name": "sharedSecret",
+      "unique-identifiers": [
+          "id"
+      ]
+    },
+    {
+      "parameter-name": "encryptedSecret",
+      "replace-name": "secret",
+      "unique-identifiers": [
+          "clientId"
+      ]
+    },
+    {
+      "parameter-name": "value",
+      "unique-identifiers": [
+          "name=PingID Properties"
+      ]
+    },
+    {
+      "parameter-name": "value",
+      "unique-identifiers": [
+          "name=PingID SDK Properties"
+      ]
+    }
+  ]
+}
