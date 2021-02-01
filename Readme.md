@@ -1,3 +1,6 @@
+
+
+
 ## Start 
 How to get devops key and user: https://devops.pingidentity.com/get-started/devopsRegistration/
 
@@ -12,6 +15,35 @@ Run the Spring Boot App inside that folder: `samlWithPing/`
 ## Test Auth with OIDC
 Run the Spring Boot App inside that folder: `oidcWithPing/`
 
+
+## Setup
+```
+--------------------------------------------------------------------------------------
+- Ping Identity integrated demo
+-
+-     app    console       login  console           console           rest    ldaps
+-     443    9000            9031   9999             8443             1443    1637
+-      |      |               |      |                 |                    |   
+-   +----------------+    +---------------+    +---------------+    +---------------+
+-   |   PingAccess   |    | PingFederate  |    |PingDataConsole|    | PingDirectory |
+-   +----------------+    +---------------+    +---------------+    +---------------+ 
+-
+-
+-   +-----------------------+--------------------------------------------------------+
+-   |  Product Console/App  |  URL                                                   |
+-   |                       |    username: administrator                             |
+-   |                       |    password: 2FederateM0re                             |
+-   +-----------------------+--------------------------------------------------------+
+-   |  PingAccess           |  https://localhost:9000/                               |
+-   |  PingFederate         |  https://localhost:9999/pingfederate/app               |
+-   |  PingDirectory        |  https://localhost:8443/   (Server=pingdirectory)      |
+-   +-----------------------+--------------------------------------------------------+
+-   |  PingDirectory        |  ldaps://localhost:1637                                |
+-   |                       |    username: cn=administrator                          |
+-   |                       |    password: 2FederateM0re                             |
+-   +-----------------------+--------------------------------------------------------+
+--------------------------------------------------------------------------------------
+```
 
 ## PingFederate ServerProfile
 ### Baseline ServerProfile

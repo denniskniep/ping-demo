@@ -413,7 +413,13 @@
         },
         {
             "operationType": "SAVE",
-            "items": [{"synchronizationFrequency": 60}],
+            "items": [{
+                "dataStoreRef": {
+                    "location": "https://${PF_ADMIN_PUBLIC_HOST_AND_PORT}/pf-admin-api/v1/dataStores",
+                    "id": ""
+                },
+                "synchronizationFrequency": 60
+            }],
             "resourceType": "/serverSettings/outboundProvisioning"
         },
         {
@@ -421,8 +427,8 @@
             "items": [{
                 "password": "${administrativeAccounts_items_Administrator_password}",
                 "roles": [
-                    "ADMINISTRATOR",
                     "CRYPTO_ADMINISTRATOR",
+                    "ADMINISTRATOR",
                     "USER_ADMINISTRATOR",
                     "EXPRESSION_ADMINISTRATOR"
                 ],
@@ -793,6 +799,10 @@
                             "value": "120"
                         },
                         {
+                            "name": "Use Centralized Signing Key",
+                            "value": "true"
+                        },
+                        {
                             "name": "JWS Algorithm",
                             "value": "RS256"
                         },
@@ -802,7 +812,7 @@
                         },
                         {
                             "name": "Active Signing Certificate Key ID",
-                            "value": "k1"
+                            "value": ""
                         },
                         {
                             "name": "JWE Algorithm",
@@ -823,10 +833,6 @@
                         {
                             "name": "Asymmetric Encryption JWKS URL",
                             "value": ""
-                        },
-                        {
-                            "name": "Use Centralized Signing Key",
-                            "value": "false"
                         },
                         {
                             "name": "Include Key ID Header Parameter",
@@ -1464,7 +1470,9 @@
                     "connectionTargetType": "STANDARD"
                 },
                 {
+                    "baseUrl": "http://localhost:8080",
                     "contactInfo": {},
+                    "virtualEntityIds": [],
                     "credentials": {
                         "certs": [],
                         "signingSettings": {
@@ -1477,6 +1485,7 @@
                             "algorithm": "SHA256withRSA"
                         }
                     },
+                    "name": "spring-demo-saml",
                     "active": true,
                     "spBrowserSso": {
                         "requireSignedAuthnRequests": false,
@@ -1531,13 +1540,9 @@
                     },
                     "entityId": "http://localhost:8080/saml2/service-provider-metadata/pingfederate",
                     "loggingMode": "STANDARD",
-                    "type": "SP",
-                    "connectionTargetType": "STANDARD",
-                    "baseUrl": "http://localhost:8080",
-                    "virtualEntityIds": [],
-                    "name": "spring-demo-saml",
                     "id": "rNe1QgDPt42EMuI70d1a1LoZFt2",
-                    "licenseConnectionGroup": ""
+                    "type": "SP",
+                    "connectionTargetType": "STANDARD"
                 }
             ],
             "resourceType": "/idp/spConnections"
@@ -1601,7 +1606,14 @@
                 "persistentGrantIdleTimeoutTimeUnit": "DAYS",
                 "userAuthorizationUrl": "",
                 "pendingAuthorizationTimeout": 600,
-                "exclusiveScopeGroups": [],
+                "exclusiveScopeGroups": [{
+                    "name": "FooResourceScopes",
+                    "description": "All Scopes of FooResource Server",
+                    "scopes": [
+                        "read_normal_foo",
+                        "read_secret_foo"
+                    ]
+                }],
                 "userAuthorizationConsentPageSetting": "INTERNAL",
                 "bypassActivationCodeConfirmation": false,
                 "persistentGrantReuseGrantTypes": ["IMPLICIT"],
@@ -1650,11 +1662,23 @@
                 ],
                 "scopeForOAuthGrantManagement": "",
                 "parReferenceTimeout": 60,
-                "exclusiveScopes": [{
-                    "name": "urn:pingidentity:directory-delegated-admin",
-                    "description": "Directory Delegated Admin",
-                    "dynamic": false
-                }],
+                "exclusiveScopes": [
+                    {
+                        "name": "urn:pingidentity:directory-delegated-admin",
+                        "description": "Directory Delegated Admin",
+                        "dynamic": false
+                    },
+                    {
+                        "name": "read_normal_foo",
+                        "description": "Read Normal Foo",
+                        "dynamic": false
+                    },
+                    {
+                        "name": "read_secret_foo",
+                        "description": "Read Secret Foo",
+                        "dynamic": false
+                    }
+                ],
                 "parReferenceLength": 24,
                 "bypassAuthorizationForApprovedGrants": false
             }],
