@@ -4,18 +4,24 @@ services:
     image: pingidentity/pingaccess:edge
     command: wait-for pingfederate:9031 -t 420 -- entrypoint.sh start-server
     environment:
-      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
-      - SERVER_PROFILE_PATH=baseline/pingaccess
+      #- SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      #- SERVER_PROFILE_PATH=baseline/pingaccess
       - PING_IDENTITY_DEVOPS_USER=${PING_IDENTITY_DEVOPS_USER}
       - PING_IDENTITY_DEVOPS_KEY=${PING_IDENTITY_DEVOPS_KEY}
       - PING_IDENTITY_ACCEPT_EULA=YES
     ports:
       - 443:443
       - 9000:9000
+      - 3000:3000
+      - 3001:3001
+    extra_hosts:
+      host.docker.internal: 172.28.0.1
     networks:
       - pingnet-dmz
+      - net    
     volumes:
       - pingaccess-out:/opt/out
+      - ./serverProfiles/pingAccess/:/opt/in
 
   pingfederate:
     image: pingidentity/pingfederate:edge
@@ -57,15 +63,77 @@ services:
   pingdataconsole:
     image: pingidentity/pingdataconsole:edge
     ports:
-      - 8443:8443
+      - 6443:6443
     networks:
       - pingnet-internal
+
+  pingdatagovernance:
+    image: pingidentity/pingdatagovernance:edge
+    command: wait-for pingdirectory:389 -t 300 -- entrypoint.sh start-server
+    environment:
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=baseline/pingdatagovernance
+      - PING_IDENTITY_DEVOPS_USER=${PING_IDENTITY_DEVOPS_USER}
+      - PING_IDENTITY_DEVOPS_KEY=${PING_IDENTITY_DEVOPS_KEY}
+      - PING_IDENTITY_ACCEPT_EULA=YES
+    ulimits:
+      nproc:
+        soft: 16384
+        hard: 16384
+      nofile:
+        soft: 65535
+        hard: 65535
+    ports:
+      - "7780:80"
+      - "7443:443"
+      - "7636:636"
+      - "7389:389"
+    networks:
+      - pingnet-dmz
+      - pingnet-internal
+    volumes:
+      - pingdatagovernance-out:/opt/out
+    #  - ${HOME}/projects/devops/pingidentity-server-profiles/baseline/pingdatagovernance:/opt/in
+
+
+  pingdatagovernancepap:
+    image: pingidentity/pingdatagovernancepap:edge
+    command: wait-for pingdirectory:389 -t 300 -- entrypoint.sh start-server
+    environment:
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=pdg-pap-integration/pingdatagovernancepap
+      - HTTPS_PORT=8443
+      - PING_IDENTITY_DEVOPS_USER=${PING_IDENTITY_DEVOPS_USER}
+      - PING_IDENTITY_DEVOPS_KEY=${PING_IDENTITY_DEVOPS_KEY}
+      - PING_IDENTITY_ACCEPT_EULA=YES
+    ulimits:
+      nproc:
+        soft: 16384
+        hard: 16384
+      nofile:
+        soft: 65535
+        hard: 65535
+    ports:
+      - "8443:8443"
+    networks:
+      - pingnet-dmz
+      - pingnet-internal
+    volumes:
+      - pingdatagovernancepap-out:/opt/out
+    #  - ${HOME}/projects/devops/pingidentity-server-profiles/pdg-pap-integration/pingdatagovernancepap:/opt/in
 
 networks:
     pingnet-internal:
     pingnet-dmz:
+    net:
+      ipam:
+          driver: default
+          config:
+              - subnet: 172.28.0.0/16
 
 volumes:
   pingaccess-out:
   pingfederate-out:
   pingdirectory-out:
+  pingdatagovernance-out:
+  pingdatagovernancepap-out:

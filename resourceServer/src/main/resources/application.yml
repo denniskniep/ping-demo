@@ -5,8 +5,8 @@
 
 server.port: 8282
 
-proxy.host: localhost
-proxy.port: 9191
+#proxy.host: localhost
+#proxy.port: 9191
 
 logging.level:
     org.springframework.security: TRACE
