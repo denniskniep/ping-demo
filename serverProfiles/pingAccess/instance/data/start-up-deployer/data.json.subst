@@ -1,9 +1,9 @@
 {
-    "version": "6.2.0.0",
+    "version": "6.2.0.3",
     "data": {
         "acmeDefaultServer": {
             "id": "8572f98e-482e-41c2-8a3d-6a0b2fc99734",
-            "location": "https://test.pingidentity.space:9000/pa-admin-api/v3/acme/servers/8572f98e-482e-41c2-8a3d-6a0b2fc99734"
+            "location": "https://localhost:9000/pa-admin-api/v3/acme/servers/8572f98e-482e-41c2-8a3d-6a0b2fc99734"
         },
         "acmeServers": [
             {
@@ -25,24 +25,24 @@
         "adminAuthWebSession": {
             "sessionPollIntervalInSeconds": 10,
             "expirationWarningInMinutes": 1,
-            "audience": "PingAccessUI",
-            "cookieDomain": null,
-            "cookieType": "Encrypted",
             "idleTimeoutInMinutes": 30,
-            "sessionTimeoutInMinutes": 240
+            "sessionTimeoutInMinutes": 240,
+            "cookieType": "Encrypted",
+            "audience": "PingAccessUI",
+            "cookieDomain": null
         },
         "adminConfig": {
-            "hostPort": "${PA_ADMIN_PRIVATE_HOSTNAME}:9090",
+            "hostPort": "localhost:9090",
             "httpProxyId": 0,
             "httpsProxyId": 0
         },
         "applications": [
             {
                 "id": 1,
-                "enabled": true,
+                "enabled": false,
                 "agentCacheInvalidatedResponseDuration": 900,
-                "agentCacheInvalidatedExpiration": 1589136342351,
-                "lastModified": 1589135442351,
+                "agentCacheInvalidatedExpiration": 1612573069575,
+                "lastModified": 1612572169575,
                 "requireHTTPS": false,
                 "name": "anything",
                 "description": "",
@@ -76,14 +76,15 @@
                         }
                     ],
                     "API": []
-                }
+                },
+                "authenticationChallengePolicyId": null
             },
             {
                 "id": 2,
-                "enabled": true,
+                "enabled": false,
                 "agentCacheInvalidatedResponseDuration": 900,
-                "agentCacheInvalidatedExpiration": 1589136403108,
-                "lastModified": 1589135503108,
+                "agentCacheInvalidatedExpiration": 1612572459779,
+                "lastModified": 1612571559779,
                 "requireHTTPS": true,
                 "name": "pingdirectory_rest_api",
                 "description": "",
@@ -112,7 +113,50 @@
                 "policy": {
                     "Web": [],
                     "API": []
-                }
+                },
+                "authenticationChallengePolicyId": null
+            },
+            {
+                "id": 3,
+                "enabled": true,
+                "agentCacheInvalidatedResponseDuration": 900,
+                "agentCacheInvalidatedExpiration": 1613429338948,
+                "lastModified": 1613428438948,
+                "requireHTTPS": false,
+                "name": "LegacyWebApp",
+                "description": "",
+                "manualOrderingEnabled": false,
+                "resourceOrder": [],
+                "applicationType": "Web",
+                "defaultAuthType": "Web",
+                "spaSupportEnabled": true,
+                "destination": "Site",
+                "contextRoot": "/legacyWebApp",
+                "realm": null,
+                "caseSensitivePath": false,
+                "allowEmptyPathSegments": false,
+                "webSessionId": 1,
+                "issuer": null,
+                "siteId": 4,
+                "agentId": 0,
+                "virtualHostIds": [
+                    2
+                ],
+                "identityMappingIds": {
+                    "Web": 1,
+                    "API": 0
+                },
+                "accessValidatorId": 0,
+                "policy": {
+                    "Web": [
+                        {
+                            "type": "Rule",
+                            "id": 1
+                        }
+                    ],
+                    "API": []
+                },
+                "authenticationChallengePolicyId": null
             }
         ],
         "authTokenMgmt": {
@@ -146,6 +190,9 @@
                 "trustedCertificateGroupId": 0
             }
         ],
+        "environment": {
+            "name": null
+        },
         "httpHostSource": {
             "headerNameList": [
                 "X-Forwarded-Host",
@@ -172,7 +219,7 @@
                 "name": "ADMIN",
                 "keyPairId": 1,
                 "useServerCipherSuiteOrder": true,
-                "restartRequired": false
+                "restartRequired": true
             },
             {
                 "id": 2,
@@ -186,7 +233,7 @@
                 "name": "AGENT",
                 "keyPairId": 1,
                 "useServerCipherSuiteOrder": true,
-                "restartRequired": false
+                "restartRequired": true
             },
             {
                 "id": 4,
@@ -196,10 +243,31 @@
                 "restartRequired": false
             }
         ],
+        "identityMappings": [
+            {
+                "className": "com.pingidentity.pa.identitymappings.HeaderIdentityMapping",
+                "id": 1,
+                "name": "IdentityHeaders",
+                "configuration": {
+                    "headerNamePrefix": "ping_access_",
+                    "exclusionList": false,
+                    "exclusionListAttributes": [],
+                    "exclusionListSubject": null,
+                    "attributeHeaderMappings": [
+                        {
+                            "subject": true,
+                            "attributeName": "access_token",
+                            "headerName": "accesstoken"
+                        }
+                    ],
+                    "headerClientCertificateMappings": []
+                }
+            }
+        ],
         "keyPairs": [
             {
                 "id": 1,
-                "alias": "PRIVATE HOSTNAME CERT",
+                "alias": "Generated: ADMIN",
                 "fileData": "${PRIVATE_KEYSTORE}",
                 "password": {
                     "value": "${PRIVATE_KEYSTORE_PIN}"
@@ -220,37 +288,46 @@
         ],
         "oauthKeyMgmt": {
             "keyRollEnabled": true,
-            "keyRollPeriodInHours": 24
+            "keyRollPeriodInHours": 24,
+            "signingAlgorithm": null
         },
         "pingFederateAdmin": {
-            "adminUsername": "${ROOT_USER}",
+            "adminUsername": "administrator",
             "adminPassword": {
                 "value": "${PING_IDENTITY_PASSWORD}"
             },
-            "host": "${PF_ADMIN_PRIVATE_HOSTNAME}",
-            "port": ${PF_ADMIN_PRIVATE_PORT_HTTPS},
             "basePath": "",
-            "useProxy": false,
-            "trustedCertificateGroupId": 2,
+            "auditLevel": "OFF",
             "secure": true,
-            "auditLevel": "OFF"
+            "trustedCertificateGroupId": 2,
+            "useProxy": false,
+            "host": "pingfederate-admin",
+            "port": 9999
         },
         "pingFederateOAuth": {
-            "clientId": "rs_client",
-            "clientSecret": {
-                "value": "2Federate"
+            "clientCredentials": {
+                "clientId": "rs_client",
+                "clientSecret": {
+                     "value": "2Federate"
+                },
+                "keyPairId": 0,
+                "credentialsType": "SECRET"
             },
-            "c  acheTokens": false,
+            "cacheTokens": false,
             "tokenTimeToLiveSeconds": -1,
             "subjectAttributeName": "Username",
             "sendAudience": false,
-            "accessValidatorId": 1,
             "useTokenIntrospection": false,
-            "name": "PingFederate"
+            "accessValidatorId": 1,
+            "name": "PingFederate",
+            "clientSecret": {
+                "value": "2Federate"
+            },
+            "clientId": "rs_client"
         },
         "pingFederateRuntime": {
             "description": null,
-            "issuer": "https://${PF_ENGINE_PRIVATE_HOSTNAME}:${PF_ENGINE_PRIVATE_PORT_HTTPS}",
+            "issuer": "https://pingfederate:9031",
             "trustedCertificateGroupId": 2,
             "useProxy": false,
             "useSlo": false,
@@ -309,6 +386,7 @@
                     "/*"
                 ],
                 "auditLevel": "ON",
+                "rootResource": true,
                 "anonymous": false,
                 "enabled": true,
                 "unprotected": false,
@@ -317,8 +395,13 @@
                     "API": []
                 },
                 "defaultAuthTypeOverride": null,
-                "rootResource": true,
-                "applicationId": 1
+                "applicationId": 1,
+                "queryParamConfig": null,
+                "resourceType": "Standard",
+                "resourceTypeConfiguration": {
+                    "responseGenerator": null
+                },
+                "authenticationChallengePolicyId": null
             },
             {
                 "id": 2,
@@ -336,6 +419,7 @@
                     "/*"
                 ],
                 "auditLevel": "ON",
+                "rootResource": true,
                 "anonymous": false,
                 "enabled": true,
                 "unprotected": false,
@@ -344,20 +428,58 @@
                     "API": []
                 },
                 "defaultAuthTypeOverride": null,
+                "applicationId": 2,
+                "queryParamConfig": null,
+                "resourceType": "Standard",
+                "resourceTypeConfiguration": {
+                    "responseGenerator": null
+                },
+                "authenticationChallengePolicyId": null
+            },
+            {
+                "id": 3,
+                "name": "Root Resource",
+                "methods": [
+                    "*"
+                ],
+                "pathPatterns": [
+                    {
+                        "pattern": "/*",
+                        "type": "WILDCARD"
+                    }
+                ],
+                "pathPrefixes": [
+                    "/*"
+                ],
+                "auditLevel": "ON",
                 "rootResource": true,
-                "applicationId": 2
+                "anonymous": false,
+                "enabled": true,
+                "unprotected": false,
+                "policy": {
+                    "Web": [],
+                    "API": []
+                },
+                "defaultAuthTypeOverride": null,
+                "applicationId": 3,
+                "queryParamConfig": null,
+                "resourceType": "Standard",
+                "resourceTypeConfiguration": {
+                    "responseGenerator": null
+                },
+                "authenticationChallengePolicyId": null
             }
         ],
         "rules": [
             {
                 "className": "com.pingidentity.pa.policy.rewrite.SynapseURLRewritePolicyInterceptor",
                 "id": 1,
-                "name": "echo to root",
+                "name": "Remove ContextPath legacyWebApp",
                 "supportedDestinations": [
                     "Site"
                 ],
                 "configuration": {
-                    "mapFrom": "/echo/(.*)",
+                    "mapFrom": "/legacyWebApp/(.*)",
                     "mapTo": "/$1"
                 }
             },
@@ -383,6 +505,17 @@
                     "username": "${ROOT_USER_DN}",
                     "password": {
                         "value": "${PING_IDENTITY_PASSWORD}"
+                    }
+                }
+            },
+            {
+                "className": "com.pingidentity.pa.siteauthenticators.BasicAuthTargetSiteAuthenticator",
+                "id": 2,
+                "name": "LegacyWebApp BasicAuth",
+                "configuration": {
+                    "username": "admin",
+                    "password": {
+                        "value": "admin"
                     }
                 }
             }
@@ -413,7 +546,7 @@
                 "id": 2,
                 "name": "pingfederate_docker",
                 "targets": [
-                    "${PF_ENGINE_PRIVATE_HOSTNAME}:${PF_ENGINE_PRIVATE_PORT_HTTPS}"
+                    "pingfederate:9031"
                 ],
                 "secure": true,
                 "trustedCertificateGroupId": 2,
@@ -433,7 +566,7 @@
                 "id": 3,
                 "name": "pingdirectory_rest_api",
                 "targets": [
-                    "${PD_ENGINE_PRIVATE_HOSTNAME}:${HTTPS_PORT}"
+                    "pingdirectory:443"
                 ],
                 "secure": true,
                 "trustedCertificateGroupId": 2,
@@ -446,6 +579,28 @@
                     1
                 ],
                 "skipHostnameVerification": true,
+                "expectedHostname": null,
+                "availabilityProfileId": 1,
+                "loadBalancingStrategyId": 0,
+                "useProxy": false
+            },
+            {
+                "id": 4,
+                "name": "LegacyWebApp",
+                "targets": [
+                    "host.docker.internal:8383"
+                ],
+                "secure": false,
+                "trustedCertificateGroupId": 0,
+                "sendPaCookie": true,
+                "useTargetHostHeader": false,
+                "keepAliveTimeout": 0,
+                "maxConnections": -1,
+                "maxWebSocketConnections": -1,
+                "siteAuthenticatorIds": [
+                    2
+                ],
+                "skipHostnameVerification": false,
                 "expectedHostname": null,
                 "availabilityProfileId": 1,
                 "loadBalancingStrategyId": 0,
@@ -472,6 +627,22 @@
                 "agentResourceCacheTTL": 900,
                 "keyPairId": 0,
                 "trustedCertificateGroupId": 0
+            },
+            {
+                "id": 3,
+                "host": "*",
+                "port": 443,
+                "agentResourceCacheTTL": 900,
+                "keyPairId": 0,
+                "trustedCertificateGroupId": 0
+            },
+            {
+                "id": 35,
+                "host": "*",
+                "port": 3001,
+                "agentResourceCacheTTL": 900,
+                "keyPairId": 0,
+                "trustedCertificateGroupId": 0
             }
         ],
         "webSessionMgmt": {
@@ -489,33 +660,36 @@
             {
                 "id": 1,
                 "name": "pingaccess_global",
+                "failOnUnsupportedPreservationContentType": false,
                 "pkceChallengeType": "SHA256",
                 "refreshUserInfoClaimsInterval": 60,
                 "requestPreservationType": "POST",
-                "webStorageType": "SessionStorage",
                 "cacheUserAttributes": false,
+                "enableRefreshUser": true,
+                "sendRequestedUrlToProvider": true,
+                "validateSessionIsAlive": false,
+                "oidcLoginType": "Code",
+                "webStorageType": "SessionStorage",
+                "requestProfile": true,
                 "scopes": [
                     "address",
                     "email",
                     "phone",
                     "profile"
                 ],
-                "oidcLoginType": "Code",
-                "enableRefreshUser": true,
-                "requestProfile": true,
-                "sendRequestedUrlToProvider": true,
-                "validateSessionIsAlive": false,
                 "clientCredentials": {
                     "clientId": "pingaccessAc",
                     "clientSecret": {
                         "value": "${PING_IDENTITY_PASSWORD}"
-                    }
+                    },
+                    "keyPairId": 0,
+                    "credentialsType": "SECRET"
                 },
-                "audience": "PingAccess",
-                "cookieDomain": "",
-                "cookieType": "Encrypted",
                 "idleTimeoutInMinutes": 60,
                 "sessionTimeoutInMinutes": 240,
+                "cookieType": "Encrypted",
+                "audience": "PingAccess",
+                "cookieDomain": "",
                 "httpOnlyCookie": true,
                 "secureCookie": true,
                 "sameSite": "Lax",
