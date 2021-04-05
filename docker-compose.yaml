@@ -1,7 +1,7 @@
 version: "2.4"
 services:
   pingaccess:
-    image: pingidentity/pingaccess:edge
+    image: pingidentity/pingaccess:2021
     command: wait-for pingfederate:9031 -t 420 -- entrypoint.sh start-server
     environment:
       #- SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
@@ -24,7 +24,7 @@ services:
       - ./serverProfiles/pingAccess/:/opt/in
 
   pingfederate:
-    image: pingidentity/pingfederate:edge
+    image: pingidentity/pingfederate:2021
     command: wait-for pingdirectory:389 -t 300 -- entrypoint.sh start-server
     environment:
       #- SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
@@ -44,7 +44,7 @@ services:
 
   # User Passwords are here: https://github.com/pingidentity/pingidentity-server-profiles/blob/master/baseline/pingdirectory/pd.profile/ldif/userRoot/10-users.ldif
   pingdirectory:
-    image: pingidentity/pingdirectory:edge
+    image: pingidentity/pingdirectory:2021
     environment:
       #- SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
       #- SERVER_PROFILE_PATH=baseline/pingdirectory
@@ -61,14 +61,14 @@ services:
       - ./serverProfiles/pingDirectory/:/opt/in
 
   pingdataconsole:
-    image: pingidentity/pingdataconsole:edge
+    image: pingidentity/pingdataconsole:2021
     ports:
       - 6443:6443
     networks:
       - pingnet-internal
 
   pingdatagovernance:
-    image: pingidentity/pingdatagovernance:edge
+    image: pingidentity/pingdatagovernance:2021
     command: wait-for pingdirectory:389 -t 300 -- entrypoint.sh start-server
     environment:
       - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
@@ -97,7 +97,7 @@ services:
 
 
   pingdatagovernancepap:
-    image: pingidentity/pingdatagovernancepap:edge
+    image: pingidentity/pingdatagovernancepap:2021
     command: wait-for pingdirectory:389 -t 300 -- entrypoint.sh start-server
     environment:
       - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
